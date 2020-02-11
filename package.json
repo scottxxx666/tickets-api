@@ -1,0 +1,11 @@
+{
+  "name": "tickets-api",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "scottxxx666@gmail.com",
+  "license": "MIT",
+  "dependencies": {
+    "apollo-server": "^2.10.0",
+    "graphql": "^14.6.0"
+  }
+}
