@@ -4,38 +4,43 @@ const { ApolloServer, gql } = require('apollo-server');
 // that together define the "shape" of queries that are executed against
 // your data.
 const typeDefs = gql`
-  # Comments in GraphQL strings (such as this one) start with the hash (#) symbol.
-
-  # This "Book" type defines the queryable fields for every book in our data source.
-  type Book {
-    title: String
-    author: String
+  type Ticket {
+    id: ID!
+    area: String!
+    seat: String!
+    number: Int!
+    price: Int!
+    payment: String!
+    note: String
+    contactWay: [ContactWay]
   }
 
-  # The "Query" type is special: it lists all of the available queries that
-  # clients can execute, along with the return type for each. In this
-  # case, the "books" query returns an array of zero or more Books (defined above).
+  type ContactWay {
+    platform: String
+    id: String
+  }
+
   type Query {
-    books: [Book]
+    getTickets: [Ticket]
   }
 `;
 
 const books = [
   {
+    id: 'AJDJDOIDJW',
     title: 'Harry Potter and the Chamber of Secrets',
     author: 'J.K. Rowling',
   },
   {
+    id: 'asdqwqf',
     title: 'Jurassic Park',
     author: 'Michael Crichton',
   },
 ];
 
-// Resolvers define the technique for fetching the types defined in the
-// schema. This resolver retrieves books from the "books" array above.
 const resolvers = {
   Query: {
-    books: () => books,
+    getTickets: () => books,
   },
 };
 
