@@ -7,6 +7,7 @@ const mongoose = require('mongoose');
 const typeDefs = gql`
   type Ticket {
     id: ID!
+    artist: String!
     area: String!
     seat: String!
     number: Int!
@@ -26,9 +27,14 @@ const typeDefs = gql`
   type Query {
     getTickets: [Ticket]
   }
+  
+  type Mutation {
+    addTicket(artist: String!, area: String!): Ticket
+  }
 `;
 
-const Tickets = mongoose.model('Tickets', new mongoose.Schema({
+const Ticket = mongoose.model('Tickets', new mongoose.Schema({
+  artist: { type: String, index: true },
   area: String,
   seat: String,
   number: Number,
@@ -40,15 +46,27 @@ const Tickets = mongoose.model('Tickets', new mongoose.Schema({
   updatedAt: Date,
 }));
 
-const getTickets = async () => {
-  const tickets = await Tickets.find();
-  console.log(tickets);
-  return tickets;
+const getTickets = () => {
+  return Ticket.find();
 };
 
 const resolvers = {
   Query: {
     getTickets: getTickets,
+  },
+  Mutation: {
+    addTicket: (parent, args, context, info) => {
+      return Ticket.create({
+        artist: args.artist,
+        area: args.area,
+        seat: args.seat,
+        number: args.number,
+        price: args.price,
+        payment: args.payment,
+        note: args.note,
+        contactWay: args.contactWay,
+      });
+    },
   },
 };
 
