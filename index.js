@@ -29,7 +29,7 @@ const typeDefs = gql`
   }
   
   type Mutation {
-    addTicket(artist: String!, area: String!): Ticket
+    createTicket(artist: String!, area: String!): Ticket
   }
 `;
 
@@ -55,7 +55,7 @@ const resolvers = {
     getTickets: getTickets,
   },
   Mutation: {
-    addTicket: (parent, args, context, info) => {
+    createTicket: (parent, args, context, info) => {
       return Ticket.create({
         artist: args.artist,
         area: args.area,
