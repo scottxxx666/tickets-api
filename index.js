@@ -30,6 +30,7 @@ const typeDefs = gql`
   
   type Mutation {
     createTicket(artist: String!, area: String!): Ticket
+    updateTicket(id: ID!, artist: String): Ticket 
   }
 `;
 
@@ -66,6 +67,9 @@ const resolvers = {
         note: args.note,
         contactWay: args.contactWay,
       });
+    },
+    updateTicket: (parent, args) => {
+      return Ticket.findByIdAndUpdate(args.id, {artist: args.artist, area: 'www'});
     },
   },
 };
