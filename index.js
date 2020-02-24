@@ -25,7 +25,7 @@ const typeDefs = gql`
   }
 
   type Query {
-    getTickets: [Ticket]
+    getTickets(artist: String!): [Ticket]
   }
   
   type Mutation {
@@ -47,8 +47,8 @@ const Ticket = mongoose.model('Tickets', new mongoose.Schema({
   updatedAt: Date,
 }));
 
-const getTickets = () => {
-  return Ticket.find();
+const getTickets = (parent, args) => {
+  return Ticket.find({ artist: args.artist });
 };
 
 const resolvers = {
