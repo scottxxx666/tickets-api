@@ -69,7 +69,7 @@ const resolvers = {
       });
     },
     updateTicket: (parent, args) => {
-      return Ticket.findByIdAndUpdate(args.id, {artist: args.artist, area: 'www'});
+      return Ticket.findByIdAndUpdate(args.id, { artist: args.artist, area: 'www' });
     },
   },
 };
