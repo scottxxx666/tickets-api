@@ -48,6 +48,7 @@ const Ticket = mongoose.model('Tickets', new mongoose.Schema({
 }));
 
 const getTickets = (parent, args) => {
+  return [];
   return Ticket.find({ artist: args.artist });
 };
 
@@ -74,7 +75,9 @@ const resolvers = {
   },
 };
 
-mongoose.connect(`mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_URL}/${process.env.DB_NAME}`, {
+mongoose.set('useFindAndModify', false);
+mongoose.connect(`mongodb+srv://change:a2hFqL9icIr834Nj@cluster0-js9wx.mongodb.net/devExchange`, {
+// mongoose.connect(`mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_URL}/${process.env.DB_NAME}`, {
   useNewUrlParser: true,
   useCreateIndex: true,
   useUnifiedTopology: true,
