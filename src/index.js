@@ -48,7 +48,6 @@ const Ticket = mongoose.model('Tickets', new mongoose.Schema({
 }));
 
 const getTickets = (parent, args) => {
-  return [];
   return Ticket.find({ artist: args.artist });
 };
 
