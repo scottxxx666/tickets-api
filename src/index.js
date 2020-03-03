@@ -1,38 +1,10 @@
-const { ApolloServer, gql } = require('apollo-server');
+const { ApolloServer } = require('apollo-server');
 const mongoose = require('mongoose');
+const typeDefs = require('./schema');
 
 // A schema is a collection of type definitions (hence "typeDefs")
 // that together define the "shape" of queries that are executed against
 // your data.
-const typeDefs = gql`
-  type Ticket {
-    id: ID!
-    artist: String!
-    area: String!
-    seat: String!
-    number: Int!
-    price: Int!
-    payment: String!
-    note: String
-    contactWay: [ContactWay]
-    createdAt: String!
-    updatedAt: String!
-  }
-
-  type ContactWay {
-    platform: String
-    id: String
-  }
-
-  type Query {
-    getTickets(artist: String!): [Ticket]
-  }
-  
-  type Mutation {
-    createTicket(artist: String!, area: String!): Ticket
-    updateTicket(id: ID!, artist: String): Ticket 
-  }
-`;
 
 const Ticket = mongoose.model('Tickets', new mongoose.Schema({
   artist: { type: String, index: true },
@@ -83,8 +55,6 @@ mongoose.connect(`mongodb+srv://change:a2hFqL9icIr834Nj@cluster0-js9wx.mongodb.n
   autoIndex: true,
 });
 
-// The ApolloServer constructor requires two parameters: your schema
-// definition and your set of resolvers.
 const server = new ApolloServer({ typeDefs, resolvers });
 
 // The `listen` method launches a web server.
