@@ -2,9 +2,7 @@ const { ApolloServer } = require('apollo-server');
 const mongoose = require('mongoose');
 const typeDefs = require('./schema');
 
-// A schema is a collection of type definitions (hence "typeDefs")
-// that together define the "shape" of queries that are executed against
-// your data.
+require('dotenv').config();
 
 const Ticket = mongoose.model('Tickets', new mongoose.Schema({
   artist: { type: String, index: true },
