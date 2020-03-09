@@ -1,30 +1,17 @@
 const { ApolloServer } = require('apollo-server');
 const mongoose = require('mongoose');
 const typeDefs = require('./schema');
-const { getTickets } = require('./components/tickets');
+const { getTickets, createTicket, updateTicket } = require('./components/tickets');
 
 require('dotenv').config();
 
 const resolvers = {
   Query: {
-    getTickets: getTickets,
+    getTickets,
   },
   Mutation: {
-    createTicket: (parent, args, context, info) => {
-      return Ticket.create({
-        artist: args.artist,
-        area: args.area,
-        seat: args.seat,
-        number: args.number,
-        price: args.price,
-        payment: args.payment,
-        note: args.note,
-        contactWay: args.contactWay,
-      });
-    },
-    updateTicket: (parent, args) => {
-      return Ticket.findByIdAndUpdate(args.id, { artist: args.artist, area: 'www' });
-    },
+    createTicket,
+    updateTicket,
   },
 };
 

@@ -17,5 +17,22 @@ const getTickets = (parent, args) => {
   return Ticket.find({ artist: args.artist });
 };
 
-module.exports = { getTickets };
+const createTicket = (parent, args, context, info) => {
+  return Ticket.create({
+    artist: args.artist,
+    area: args.area,
+    seat: args.seat,
+    number: args.number,
+    price: args.price,
+    payment: args.payment,
+    note: args.note,
+    contactWay: args.contactWay,
+  });
+};
+
+const updateTicket = (parent, args) => {
+  return Ticket.findByIdAndUpdate(args.id, { artist: args.artist, area: 'www' });
+};
+
+module.exports = { getTickets, createTicket, updateTicket };
 
