@@ -5,11 +5,26 @@ const { getTickets, createTicket, updateTicket } = require('./components/tickets
 
 require('dotenv').config();
 
+let userSchema = new mongoose.Schema({
+  email: String,
+  openIds: [{ platform: String, openId: String }],
+  createdAt: Date,
+  updatedAt: Date,
+});
+
+userSchema.index({ "openIds.openId": 1, "openIds.platform": 1 }, { unique: true });
+
+const User = mongoose.model('User', userSchema);
+
 const resolvers = {
   Query: {
     getTickets,
   },
   Mutation: {
+    signUp: async (_, args) => {
+      const user = await User.create({ email: '@@', openIds: [{ openId: args.openId, platform: args.platform }] });
+      return { token: 'www', user };
+    },
     createTicket,
     updateTicket,
   },

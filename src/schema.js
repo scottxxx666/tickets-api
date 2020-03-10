@@ -15,6 +15,16 @@ module.exports = gql`
         updatedAt: String!
     }
 
+    type User {
+        id: ID!
+        email: String
+    }
+   
+    type AuthPayload {
+        token: String!
+        user: User
+    }
+
     type ContactWay {
         platform: String
         id: String
@@ -25,6 +35,7 @@ module.exports = gql`
     }
 
     type Mutation {
+        signUp(platform: String!, openId: String!): AuthPayload
         createTicket(artist: String!, area: String!): Ticket
         updateTicket(id: ID!, artist: String): Ticket
     }
