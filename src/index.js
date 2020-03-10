@@ -18,7 +18,7 @@ const User = mongoose.model('User', userSchema);
 function generateToken(user) {
   return jwt.sign({
     user: { id: user.id },
-  }, 'secret', { expiresIn: '3d' });
+  }, process.env.SECRET_KEY, { expiresIn: '3d' });
 }
 
 const resolvers = {
