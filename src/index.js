@@ -10,7 +10,7 @@ let userSchema = new mongoose.Schema({
   openIds: [{ platform: String, openId: String }],
 }, { timestamps: true });
 
-userSchema.index({ "openIds.openId": 1, "openIds.platform": 1 }, { unique: true });
+userSchema.index({ "openIds.platform": 1, "openIds.openId": 1 }, { unique: true });
 
 const User = mongoose.model('User', userSchema);
 
@@ -20,7 +20,7 @@ const resolvers = {
   },
   Mutation: {
     signUp: async (_, args) => {
-      const user = await User.create({ email: '@@', openIds: [{ openId: args.openId, platform: args.platform }] });
+      const user = await User.create({ email: '@@', openIds: [{ platform: args.platform, openId: args.openId }] });
       return { token: 'www', user };
     },
     login: async (_, args) => {
