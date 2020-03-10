@@ -2,6 +2,7 @@ const { ApolloServer } = require('apollo-server');
 const mongoose = require('mongoose');
 const typeDefs = require('./schema');
 const { getTickets, createTicket, updateTicket } = require('./components/tickets');
+const jwt = require('jsonwebtoken');
 
 require('dotenv').config();
 
@@ -14,18 +15,33 @@ userSchema.index({ "openIds.platform": 1, "openIds.openId": 1 }, { unique: true 
 
 const User = mongoose.model('User', userSchema);
 
+function generateToken(user) {
+  return jwt.sign({
+    user: { id: user.id },
+  }, 'secret', { expiresIn: '3d' });
+}
+
 const resolvers = {
   Query: {
     getTickets,
   },
   Mutation: {
     signUp: async (_, args) => {
-      const user = await User.create({ email: '@@', openIds: [{ platform: args.platform, openId: args.openId }] });
-      return { token: 'www', user };
+      const user = await User.create({
+        email: args.email,
+        openIds: [{ platform: args.platform, openId: args.openId }],
+      });
+      return {
+        token: generateToken(user),
+        user,
+      };
     },
     login: async (_, args) => {
-      const user = User.findOne({ 'openIds.platform': args.platform, 'openIds.openId': args.openId });
-      return { token: 'login', user };
+      const user = await User.findOne({ 'openIds.platform': args.platform, 'openIds.openId': args.openId });
+      return {
+        token: generateToken(user),
+        user,
+      };
     },
     createTicket,
     updateTicket,
