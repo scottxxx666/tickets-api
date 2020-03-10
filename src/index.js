@@ -8,9 +8,7 @@ require('dotenv').config();
 let userSchema = new mongoose.Schema({
   email: String,
   openIds: [{ platform: String, openId: String }],
-  createdAt: Date,
-  updatedAt: Date,
-});
+}, { timestamps: true });
 
 userSchema.index({ "openIds.openId": 1, "openIds.platform": 1 }, { unique: true });
 

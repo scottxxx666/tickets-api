@@ -9,9 +9,7 @@ const Ticket = mongoose.model('Tickets', new mongoose.Schema({
   payment: String,
   note: String,
   contactWay: [{ platform: String, id: String }],
-  createdAt: Date,
-  updatedAt: Date,
-}));
+}, { timestamps: true }));
 
 const getTickets = (parent, args) => {
   return Ticket.find({ artist: args.artist });
