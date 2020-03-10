@@ -23,6 +23,10 @@ const resolvers = {
       const user = await User.create({ email: '@@', openIds: [{ openId: args.openId, platform: args.platform }] });
       return { token: 'www', user };
     },
+    login: async (_, args) => {
+      const user = User.findOne({ 'openIds.platform': args.platform, 'openIds.openId': args.openId });
+      return { token: 'login', user };
+    },
     createTicket,
     updateTicket,
   },
