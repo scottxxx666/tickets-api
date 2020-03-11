@@ -30,8 +30,12 @@ const createTicket = (parent, args, context, info) => {
   });
 };
 
-const updateTicket = (parent, args) => {
-  return Ticket.findByIdAndUpdate(args.id, { artist: args.artist, area: 'www' });
+const updateTicket = async (parent, args, context) => {
+  const ticket = await Ticket.findById(args.id);
+  if (ticket.userId.toString() !== context.user.id) {
+    throw new Error('No permission');
+  }
+  return Ticket.findByIdAndUpdate(args.id, { artist: args.artist, area: 'www2' });
 };
 
 module.exports = { getTickets, createTicket, updateTicket };
