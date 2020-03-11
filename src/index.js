@@ -36,7 +36,7 @@ const resolvers = {
         user,
       };
     },
-    login: async (_, args) => {
+    login: async (_, args, context) => {
       const user = await User.findOne({ 'openIds.platform': args.platform, 'openIds.openId': args.openId });
       return {
         token: generateToken(user),
@@ -56,7 +56,18 @@ mongoose.connect(`mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD
   autoIndex: true,
 });
 
-const server = new ApolloServer({ typeDefs, resolvers });
+const server = new ApolloServer({
+  typeDefs, resolvers, context: ({ req }) => {
+    const auth = req.get('Authorization');
+    if (auth) {
+      const token = auth.replace('Bearer ', '');
+      const { user } = jwt.verify(token, process.env.SECRET_KEY);
+      return {
+        user,
+      };
+    }
+  },
+});
 
 // The `listen` method launches a web server.
 server.listen().then(({ url }) => {
