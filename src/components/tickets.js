@@ -9,6 +9,7 @@ const Ticket = mongoose.model('Tickets', new mongoose.Schema({
   payment: String,
   note: String,
   contactWay: [{ platform: String, id: String }],
+  userId: mongoose.ObjectId,
 }, { timestamps: true }));
 
 const getTickets = (parent, args) => {
@@ -25,6 +26,7 @@ const createTicket = (parent, args, context, info) => {
     payment: args.payment,
     note: args.note,
     contactWay: args.contactWay,
+    userId: context.user.id,
   });
 };
 
