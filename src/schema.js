@@ -17,6 +17,27 @@ module.exports = gql`
         event: Event!
     }
 
+    input TicketInput {
+        artist: String!
+        area: String!
+        seat: String!
+        number: Int!
+        price: Int!
+        payment: String!
+        note: String
+        contactWay: [ContactWayInput]
+        event: EventInput!
+    }
+
+    input ContactWayInput {
+        platform: String!
+        id: String
+    }
+
+    input EventInput {
+        id: ID!
+    }
+
     type User {
         id: ID!
         email: String
@@ -44,7 +65,7 @@ module.exports = gql`
     type Mutation {
         signUp(platform: String!, openId: String!): AuthPayload
         login(platform: String!, openId: String!): AuthPayload
-        createTicket(artist: String!, area: String!): Ticket
+        createTicket(input: TicketInput!): Ticket
         updateTicket(id: ID!, artist: String): Ticket
     }
 `;

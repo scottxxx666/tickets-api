@@ -17,16 +17,18 @@ const tickets = (parent, args) => {
 };
 
 const createTicket = (parent, args, context, info) => {
+  const input = args.input;
   return Ticket.create({
-    artist: args.artist,
-    area: args.area,
-    seat: args.seat,
-    number: args.number,
-    price: args.price,
-    payment: args.payment,
-    note: args.note,
-    contactWay: args.contactWay,
+    artist: input.artist,
+    area: input.area,
+    seat: input.seat,
+    number: input.number,
+    price: input.price,
+    payment: input.payment,
+    note: input.note,
+    contactWay: input.contactWay,
     postedBy: context.user.id,
+    event: input.event.id,
   });
 };
 
