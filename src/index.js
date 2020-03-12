@@ -51,6 +51,11 @@ const resolvers = {
       return parent;
     },
   },
+  Event: {
+    id: (parent) => {
+      return parent;
+    },
+  },
 };
 
 mongoose.set('useFindAndModify', false);

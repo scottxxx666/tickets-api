@@ -10,6 +10,7 @@ const Ticket = mongoose.model('Tickets', new mongoose.Schema({
   note: String,
   contactWay: [{ platform: String, id: String }],
   postedBy: mongoose.ObjectId,
+  event: mongoose.ObjectId,
 }, { timestamps: true }));
 
 const tickets = (parent, args) => {
