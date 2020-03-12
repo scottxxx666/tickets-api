@@ -14,6 +14,7 @@ module.exports = gql`
         createdAt: String!
         updatedAt: String!
         postedBy: User!
+        event: Event!
     }
 
     type User {
@@ -21,6 +22,11 @@ module.exports = gql`
         email: String
     }
    
+    type Event {
+        id: ID!
+        artist: String!
+    }
+    
     type AuthPayload {
         token: String!
         user: User
