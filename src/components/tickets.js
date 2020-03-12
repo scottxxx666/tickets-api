@@ -12,7 +12,7 @@ const Ticket = mongoose.model('Tickets', new mongoose.Schema({
   postedBy: mongoose.ObjectId,
 }, { timestamps: true }));
 
-const getTickets = (parent, args) => {
+const tickets = (parent, args) => {
   return Ticket.find({ artist: args.artist });
 };
 
@@ -38,5 +38,5 @@ const updateTicket = async (parent, args, context) => {
   return Ticket.findByIdAndUpdate(args.id, { artist: args.artist, area: 'www2' });
 };
 
-module.exports = { getTickets, createTicket, updateTicket };
+module.exports = { tickets, createTicket, updateTicket };
 

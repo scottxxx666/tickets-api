@@ -21,12 +21,12 @@ module.exports = gql`
         id: ID!
         email: String
     }
-   
+
     type Event {
         id: ID!
         artist: String!
     }
-    
+
     type AuthPayload {
         token: String!
         user: User
@@ -38,7 +38,7 @@ module.exports = gql`
     }
 
     type Query {
-        getTickets(artist: String!): [Ticket]
+        tickets(artist: String!): [Ticket]
     }
 
     type Mutation {

@@ -1,7 +1,7 @@
 const { ApolloServer } = require('apollo-server');
 const mongoose = require('mongoose');
 const typeDefs = require('./schema');
-const { getTickets, createTicket, updateTicket } = require('./components/tickets');
+const { tickets, createTicket, updateTicket } = require('./components/tickets');
 const jwt = require('jsonwebtoken');
 
 require('dotenv').config();
@@ -23,7 +23,7 @@ function generateToken(user) {
 
 const resolvers = {
   Query: {
-    getTickets,
+    tickets,
   },
   Mutation: {
     signUp: async (_, args) => {
