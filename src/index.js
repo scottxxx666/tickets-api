@@ -46,6 +46,11 @@ const resolvers = {
     createTicket,
     updateTicket,
   },
+  User: {
+    id: (parent) => {
+      return parent;
+    },
+  },
 };
 
 mongoose.set('useFindAndModify', false);

@@ -9,7 +9,7 @@ const Ticket = mongoose.model('Tickets', new mongoose.Schema({
   payment: String,
   note: String,
   contactWay: [{ platform: String, id: String }],
-  userId: mongoose.ObjectId,
+  postedBy: mongoose.ObjectId,
 }, { timestamps: true }));
 
 const getTickets = (parent, args) => {
@@ -26,13 +26,13 @@ const createTicket = (parent, args, context, info) => {
     payment: args.payment,
     note: args.note,
     contactWay: args.contactWay,
-    userId: context.user.id,
+    postedBy: context.user.id,
   });
 };
 
 const updateTicket = async (parent, args, context) => {
   const ticket = await Ticket.findById(args.id);
-  if (ticket.userId.toString() !== context.user.id) {
+  if (ticket.postedBy.toString() !== context.user.id) {
     throw new Error('No permission');
   }
   return Ticket.findByIdAndUpdate(args.id, { artist: args.artist, area: 'www2' });

@@ -13,6 +13,7 @@ module.exports = gql`
         contactWay: [ContactWay]
         createdAt: String!
         updatedAt: String!
+        postedBy: User!
     }
 
     type User {
