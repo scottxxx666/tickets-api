@@ -33,11 +33,24 @@ const createTicket = (parent, args, context, info) => {
 };
 
 const updateTicket = async (parent, args, context) => {
-  const ticket = await Ticket.findById(args.id);
+  const input = args.input;
+  const id = args.id;
+  const ticket = await Ticket.findById(id);
   if (ticket.postedBy.toString() !== context.user.id) {
     throw new Error('No permission');
   }
-  return Ticket.findByIdAndUpdate(args.id, { artist: args.artist, area: 'www2' });
+  return Ticket.findByIdAndUpdate(id, {
+    artist: input.artist,
+    area: input.area,
+    seat: input.seat,
+    number: input.number,
+    price: input.price,
+    payment: input.payment,
+    note: input.note,
+    contactWay: input.contactWay,
+    postedBy: context.user.id,
+    event: input.event.id,
+  });
 };
 
 module.exports = { tickets, createTicket, updateTicket };

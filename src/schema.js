@@ -66,6 +66,6 @@ module.exports = gql`
         signUp(platform: String!, openId: String!): AuthPayload
         login(platform: String!, openId: String!): AuthPayload
         createTicket(input: TicketInput!): Ticket
-        updateTicket(id: ID!, artist: String): Ticket
+        updateTicket(id: ID!, input: TicketInput): Ticket
     }
 `;
