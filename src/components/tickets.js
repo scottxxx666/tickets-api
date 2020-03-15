@@ -8,7 +8,7 @@ const Ticket = mongoose.model('Tickets', new mongoose.Schema({
   price: Number,
   payment: String,
   note: String,
-  contactWay: [{ platform: String, id: String }],
+  contactInformation: [{ platform: String, platformId: String }],
   postedBy: mongoose.ObjectId,
   event: mongoose.ObjectId,
 }, { timestamps: true }));
@@ -27,7 +27,7 @@ const createTicket = (parent, args, context, info) => {
     price: input.price,
     payment: input.payment,
     note: input.note,
-    contactWay: input.contactWay,
+    contactInformation: input.contactInformation,
     postedBy: context.user.id,
     event: input.event.id,
   });
@@ -48,7 +48,7 @@ const updateTicket = async (parent, args, context) => {
     price: input.price,
     payment: input.payment,
     note: input.note,
-    contactWay: input.contactWay,
+    contactInformation: input.contactInformation,
     postedBy: context.user.id,
     event: input.event.id,
   });

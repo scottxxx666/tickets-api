@@ -10,7 +10,7 @@ module.exports = gql`
         price: Int!
         payment: String!
         note: String
-        contactWay: [ContactWay]
+        contactInformation: [ContactInformation]
         createdAt: String!
         updatedAt: String!
         postedBy: User!
@@ -25,13 +25,13 @@ module.exports = gql`
         price: Int!
         payment: String!
         note: String
-        contactWay: [ContactWayInput]
+        contactInformation: [ContactInformationInput]
         event: EventInput!
     }
 
-    input ContactWayInput {
+    input ContactInformationInput {
         platform: String!
-        id: String
+        platformId: String!
     }
 
     input EventInput {
@@ -53,9 +53,9 @@ module.exports = gql`
         user: User
     }
 
-    type ContactWay {
-        platform: String
-        id: String
+    type ContactInformation {
+        platform: String!
+        platformId: String!
     }
 
     type Query {
