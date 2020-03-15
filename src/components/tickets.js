@@ -9,8 +9,8 @@ const Ticket = mongoose.model('Tickets', new mongoose.Schema({
   payment: String,
   note: String,
   contactInformation: [{ platform: String, platformId: String }],
-  postedBy: mongoose.ObjectId,
-  event: mongoose.ObjectId,
+  postedBy: { id: mongoose.ObjectId },
+  eventId: mongoose.ObjectId,
 }, { timestamps: true }));
 
 const tickets = (parent, args) => {
@@ -28,8 +28,8 @@ const createTicket = (parent, args, context, info) => {
     payment: input.payment,
     note: input.note,
     contactInformation: input.contactInformation,
-    postedBy: context.user.id,
-    event: input.event.id,
+    postedBy: { id: context.user.id },
+    eventId: input.event.id,
   });
 };
 
@@ -37,7 +37,7 @@ const updateTicket = async (parent, args, context) => {
   const input = args.input;
   const id = args.id;
   const ticket = await Ticket.findById(id);
-  if (ticket.postedBy.toString() !== context.user.id) {
+  if (ticket.postedBy.id.toString() !== context.user.id) {
     throw new Error('No permission');
   }
   return Ticket.findByIdAndUpdate(id, {
@@ -49,8 +49,8 @@ const updateTicket = async (parent, args, context) => {
     payment: input.payment,
     note: input.note,
     contactInformation: input.contactInformation,
-    postedBy: context.user.id,
-    event: input.event.id,
+    postedBy: { id: context.user.id },
+    eventId: input.event.id,
   });
 };
 

@@ -46,14 +46,9 @@ const resolvers = {
     createTicket,
     updateTicket,
   },
-  User: {
-    id: (parent) => {
-      return parent;
-    },
-  },
-  Event: {
-    id: (parent) => {
-      return parent;
+  Ticket: {
+    event: (parent) => {
+      return { id: parent.eventId };
     },
   },
 };
