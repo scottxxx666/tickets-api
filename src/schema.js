@@ -3,6 +3,7 @@ const { gql } = require('apollo-server');
 module.exports = gql`
     type Ticket {
         id: ID!
+        status: TicketStatus!
         artist: String!
         area: String!
         seat: String!
@@ -17,7 +18,13 @@ module.exports = gql`
         event: Event!
     }
 
+    enum TicketStatus {
+        WAITING
+        DONE
+    }
+
     input TicketInput {
+        status: TicketStatus!
         artist: String!
         area: String!
         seat: String!
