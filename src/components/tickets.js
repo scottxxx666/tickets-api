@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
 const Ticket = mongoose.model('Tickets', new mongoose.Schema({
+  status: String,
   artist: { type: String, index: true },
   area: String,
   seat: String,
@@ -20,6 +21,7 @@ const tickets = (parent, args) => {
 const createTicket = (parent, args, context, info) => {
   const input = args.input;
   return Ticket.create({
+    status: 'WAITING',
     artist: input.artist,
     area: input.area,
     seat: input.seat,
@@ -41,6 +43,7 @@ const updateTicket = async (parent, args, context) => {
     throw new Error('No permission');
   }
   return Ticket.findByIdAndUpdate(id, {
+    status: input.status,
     artist: input.artist,
     area: input.area,
     seat: input.seat,
