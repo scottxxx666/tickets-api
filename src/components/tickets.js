@@ -2,7 +2,6 @@ const mongoose = require('mongoose');
 
 const Ticket = mongoose.model('Tickets', new mongoose.Schema({
   status: String,
-  artist: { type: String, index: true },
   area: String,
   seat: String,
   number: Number,
@@ -11,18 +10,17 @@ const Ticket = mongoose.model('Tickets', new mongoose.Schema({
   note: String,
   contactInformation: [{ platform: String, platformId: String }],
   postedBy: { id: mongoose.ObjectId },
-  eventId: mongoose.ObjectId,
+  eventId: { type: mongoose.ObjectId, index: true },
 }, { timestamps: true }));
 
 const tickets = (parent, args) => {
-  return Ticket.find({ artist: args.artist });
+  return Ticket.find({ eventId: args.eventId });
 };
 
 const createTicket = (parent, args, context, info) => {
   const input = args.input;
   return Ticket.create({
     status: 'WAITING',
-    artist: input.artist,
     area: input.area,
     seat: input.seat,
     number: input.number,
@@ -44,7 +42,6 @@ const updateTicket = async (parent, args, context) => {
   }
   return Ticket.findByIdAndUpdate(id, {
     status: input.status,
-    artist: input.artist,
     area: input.area,
     seat: input.seat,
     number: input.number,

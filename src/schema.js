@@ -4,7 +4,6 @@ module.exports = gql`
     type Ticket {
         id: ID!
         status: TicketStatus!
-        artist: String!
         area: String!
         seat: String!
         number: Int!
@@ -25,7 +24,6 @@ module.exports = gql`
 
     input TicketInput {
         status: TicketStatus!
-        artist: String!
         area: String!
         seat: String!
         number: Int!
@@ -66,7 +64,7 @@ module.exports = gql`
     }
 
     type Query {
-        tickets(artist: String!): [Ticket]
+        tickets(eventId: ID!): [Ticket]
     }
 
     type Mutation {
