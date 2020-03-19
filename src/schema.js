@@ -68,8 +68,8 @@ module.exports = gql`
     }
 
     type Mutation {
-        signUp(platform: String!, openId: String!): AuthPayload
-        login(platform: String!, openId: String!): AuthPayload
+        signUp(platform: String!, token: String!): AuthPayload
+        login(platform: String!, token: String!): AuthPayload
         createTicket(input: TicketInput!): Ticket
         updateTicket(id: ID!, input: TicketInput): Ticket
     }

@@ -3,11 +3,13 @@ const mongoose = require('mongoose');
 const typeDefs = require('./schema');
 const { tickets, createTicket, updateTicket } = require('./components/tickets');
 const jwt = require('jsonwebtoken');
+const { OAuth2Client } = require('google-auth-library');
 
 require('dotenv').config();
 
 let userSchema = new mongoose.Schema({
   email: String,
+  name: String,
   openIds: [{ platform: String, openId: String }],
 }, { timestamps: true });
 
@@ -27,10 +29,26 @@ const resolvers = {
   },
   Mutation: {
     signUp: async (_, args) => {
-      const user = await User.create({
-        email: args.email,
-        openIds: [{ platform: args.platform, openId: args.openId }],
-      });
+      let clientId = process.env.GOOGLE_CLIENT_ID;
+      const client = new OAuth2Client(clientId);
+      const ticket = await client.verifyIdToken({ idToken: args.token });
+      const openId = ticket.getUserId();
+      const payload = ticket.getPayload();
+
+      if (payload.aud !== clientId) {
+        throw new Error('Auth error!');
+      }
+
+      const userInput = {
+        name: payload.name,
+        openIds: [{ platform: 'GOOGLE', openId: openId }],
+      };
+
+      if (payload.email && payload.email_verified) {
+        userInput.email = payload.email;
+      }
+
+      const user = await User.create(userInput);
       return {
         token: generateToken(user),
         user,
