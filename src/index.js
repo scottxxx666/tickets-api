@@ -17,10 +17,21 @@ userSchema.index({ "openIds.platform": 1, "openIds.openId": 1 }, { unique: true 
 
 const User = mongoose.model('User', userSchema);
 
+const clientId = process.env.GOOGLE_CLIENT_ID;
+
 function generateToken(user) {
   return jwt.sign({
     user: { id: user.id },
   }, process.env.SECRET_KEY, { expiresIn: '3d' });
+
+}
+
+async function retrieveUserInfo(token) {
+  const client = new OAuth2Client(clientId);
+  const ticket = await client.verifyIdToken({ idToken: token });
+  const openId = ticket.getUserId();
+  const payload = ticket.getPayload();
+  return { openId, payload };
 }
 
 const resolvers = {
@@ -29,12 +40,7 @@ const resolvers = {
   },
   Mutation: {
     signUp: async (_, args) => {
-      let clientId = process.env.GOOGLE_CLIENT_ID;
-      const client = new OAuth2Client(clientId);
-      const ticket = await client.verifyIdToken({ idToken: args.token });
-      const openId = ticket.getUserId();
-      const payload = ticket.getPayload();
-
+      const { openId, payload } = await retrieveUserInfo(args.token);
       if (payload.aud !== clientId) {
         throw new Error('Auth error!');
       }
@@ -55,7 +61,8 @@ const resolvers = {
       };
     },
     login: async (_, args, context) => {
-      const user = await User.findOne({ 'openIds.platform': args.platform, 'openIds.openId': args.openId });
+      const userInfo = await retrieveUserInfo(args.token);
+      const user = await User.findOne({ 'openIds.platform': 'GOOGLE', 'openIds.openId': userInfo.openId });
       return {
         token: generateToken(user),
         user,
