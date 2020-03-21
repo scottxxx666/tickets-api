@@ -1,16 +1,6 @@
-const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
 const { OAuth2Client } = require('google-auth-library');
-
-const userSchema = new mongoose.Schema({
-  email: String,
-  name: String,
-  openIds: [{ platform: String, openId: String }],
-}, { timestamps: true });
-
-userSchema.index({ "openIds.platform": 1, "openIds.openId": 1 }, { unique: true });
-
-const User = mongoose.model('User', userSchema);
+const { createUser, findUser } = require('./user-repository');
 
 const clientId = process.env.GOOGLE_CLIENT_ID;
 
@@ -31,8 +21,6 @@ async function retrieveUserInfo(token) {
 const signUp = async (_, args) => {
   const { openId, payload } = await retrieveUserInfo(args.token);
   if (payload.aud !== clientId) {
-    console.log(payload);
-    console.log(clientId);
     throw new Error('Auth error!');
   }
 
@@ -45,7 +33,7 @@ const signUp = async (_, args) => {
     userInput.email = payload.email;
   }
 
-  const user = await User.create(userInput);
+  const user = await createUser(userInput);
   return {
     token: generateToken(user),
     user,
@@ -54,7 +42,7 @@ const signUp = async (_, args) => {
 
 const login = async (_, args, context) => {
   const userInfo = await retrieveUserInfo(args.token);
-  const user = await User.findOne({ 'openIds.platform': 'GOOGLE', 'openIds.openId': userInfo.openId });
+  const user = await findUser(userInfo.openId);
   return {
     token: generateToken(user),
     user,
