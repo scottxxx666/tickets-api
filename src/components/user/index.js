@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const { createUser, getUserByOpenId } = require('./user-repository');
-const { getUserInput, getOpenId } = require('./social/google');
+const { getUserInput, getOpenId } = require('./platform/google');
 
 function generateToken(user) {
   return jwt.sign({
