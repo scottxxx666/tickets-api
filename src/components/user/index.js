@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
-const { createUser, findUserByOpenId } = require('./user-repository');
-const { retrieveUser, retrieveOpenId } = require('./social/google');
+const { createUser, getUserByOpenId } = require('./user-repository');
+const { getUserInput, getOpenId } = require('./social/google');
 
 function generateToken(user) {
   return jwt.sign({
@@ -9,7 +9,7 @@ function generateToken(user) {
 }
 
 const signUp = async (_, args) => {
-  const userInput = await retrieveUser(args.token);
+  const userInput = await getUserInput(args.token);
   const user = await createUser(userInput);
   return {
     token: generateToken(user),
@@ -18,8 +18,8 @@ const signUp = async (_, args) => {
 };
 
 const login = async (_, args, context) => {
-  const openId = await retrieveOpenId(args.token);
-  const user = await findUserByOpenId(openId);
+  const openId = await getOpenId(args.token);
+  const user = await getUserByOpenId(openId);
   return {
     token: generateToken(user),
     user,

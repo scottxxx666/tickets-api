@@ -4,8 +4,8 @@ const createUser = (userInput) => {
   return User.create(userInput);
 };
 
-const findUserByOpenId = (id) => {
-  return User.findOne({ 'openIds.platform': 'GOOGLE', 'openIds.openId': id });
+const getUserByOpenId = (openId) => {
+  return User.findOne({ 'openIds.platform': 'GOOGLE', 'openIds.openId': openId });
 };
 
-module.exports = { createUser, findUserByOpenId };
+module.exports = { createUser, getUserByOpenId };
