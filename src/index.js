@@ -2,8 +2,7 @@ require('dotenv').config();
 const { ApolloServer } = require('apollo-server');
 const mongoose = require('mongoose');
 const typeDefs = require('./schema');
-const { tickets, createTicket, updateTicket } = require('./components/tickets');
-
+const { tickets, createTicket, updateTicket } = require('./components/ticket');
 const { signUp, login, decodeToken } = require('./components/user');
 
 const resolvers = {
