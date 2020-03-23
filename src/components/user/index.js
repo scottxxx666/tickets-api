@@ -8,6 +8,10 @@ function generateToken(user) {
   }, process.env.SECRET_KEY, { expiresIn: '3d' });
 }
 
+function decodeToken(token) {
+  return jwt.verify(token, process.env.SECRET_KEY);
+}
+
 const signUp = async (_, args) => {
   const userInput = await getUserInput(args.token);
   const user = await createUser(userInput);
@@ -26,4 +30,4 @@ const login = async (_, args, context) => {
   };
 };
 
-module.exports = { signUp, login };
+module.exports = { signUp, login, decodeToken };

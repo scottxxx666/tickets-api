@@ -3,8 +3,8 @@ const { ApolloServer } = require('apollo-server');
 const mongoose = require('mongoose');
 const typeDefs = require('./schema');
 const { tickets, createTicket, updateTicket } = require('./components/tickets');
-const { signUp, login } = require('./components/user');
 
+const { signUp, login, decodeToken } = require('./components/user');
 
 const resolvers = {
   Query: {
@@ -36,7 +36,7 @@ const server = new ApolloServer({
     const auth = req.get('Authorization');
     if (auth) {
       const token = auth.replace('Bearer ', '');
-      const { user } = jwt.verify(token, process.env.SECRET_KEY);
+      const { user } = decodeToken(token);
       return {
         user,
       };
