@@ -6,15 +6,18 @@ const getUserInput = async (token) => {
 };
 
 function toUserInput(openId, payload) {
-  const userInput = {
+  return {
     name: payload.name,
     openIds: [{ platform: 'GOOGLE', openId: openId }],
+    email: getEmail(payload),
   };
+}
 
+function getEmail(payload) {
   if (payload.email && payload.email_verified) {
-    userInput.email = payload.email;
+    return payload.email;
   }
-  return userInput;
+  return null;
 }
 
 const getOpenId = async (token) => {
