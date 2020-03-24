@@ -1,9 +1,9 @@
 require('dotenv').config();
 const { ApolloServer } = require('apollo-server');
-const mongoose = require('mongoose');
 const typeDefs = require('./schema');
 const { tickets, createTicket, updateTicket } = require('./components/ticket');
 const { signUp, login, decodeToken } = require('./components/user');
+const initDB = require('./db');
 
 const resolvers = {
   Query: {
@@ -22,13 +22,7 @@ const resolvers = {
   },
 };
 
-mongoose.set('useFindAndModify', false);
-mongoose.connect(`mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_URL}/${process.env.DB_NAME}`, {
-  useNewUrlParser: true,
-  useCreateIndex: true,
-  useUnifiedTopology: true,
-  autoIndex: true,
-});
+initDB();
 
 const server = new ApolloServer({
   typeDefs, resolvers, context: ({ req }) => {
