@@ -1,4 +1,5 @@
 const { OAuth2Client } = require('google-auth-library');
+const AuthInvalidError = require('../auth-invalid-error');
 
 const clientId = process.env.GOOGLE_CLIENT_ID;
 
@@ -19,7 +20,7 @@ async function retrieveUserInfo(token) {
 
 function validate(payload) {
   if (payload.aud !== clientId) {
-    throw new Error('Auth error!');
+    throw new AuthInvalidError('Invalid aud');
   }
 }
 

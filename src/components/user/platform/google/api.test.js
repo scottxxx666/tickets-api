@@ -1,5 +1,6 @@
 const api = require('./api');
 const { OAuth2Client } = require('google-auth-library');
+const AuthInvalidError = require('../auth-invalid-error');
 
 jest.mock('google-auth-library');
 
@@ -11,7 +12,7 @@ describe('getValidUserInfo', function () {
 
   test('throw error if aud not equal client id', async function () {
     given('fakeUserId', { aud: 'wrong aud' });
-    await expect(api.getValidUserInfo()).rejects.toThrowError('Auth error!');
+    await shouldThrow(new AuthInvalidError('Invalid aud'));
   });
 
   function given(userId, payload) {
@@ -25,5 +26,9 @@ describe('getValidUserInfo', function () {
 
   async function shouldReturn(expected) {
     await expect(api.getValidUserInfo()).resolves.toStrictEqual(expected);
+  }
+
+  async function shouldThrow(error) {
+    await expect(api.getValidUserInfo()).rejects.toThrow(error);
   }
 });
