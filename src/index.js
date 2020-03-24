@@ -1,26 +1,9 @@
 require('dotenv').config();
 const { ApolloServer } = require('apollo-server');
 const typeDefs = require('./schema');
-const { tickets, createTicket, updateTicket } = require('./components/ticket');
-const { signUp, login, decodeToken } = require('./components/user');
+const { decodeToken } = require('./components/user');
 const initDB = require('./db');
-
-const resolvers = {
-  Query: {
-    tickets,
-  },
-  Mutation: {
-    signUp,
-    login,
-    createTicket,
-    updateTicket,
-  },
-  Ticket: {
-    event: (parent) => {
-      return { id: parent.eventId };
-    },
-  },
-};
+const resolvers = require('./resolvers');
 
 initDB();
 
