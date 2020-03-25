@@ -5,6 +5,7 @@ const { decodeToken } = require('./components/user');
 const initDB = require('./db');
 const resolvers = require('./resolvers');
 const { AuthenticationError } = require('apollo-server');
+const DuplicateError = require('./components/user/error/duplicate-error');
 
 initDB();
 
@@ -20,11 +21,9 @@ const server = new ApolloServer({
     }
   },
   formatError: (err) => {
-    // let client know token error
-    if (err.message.startsWith('Token ')) {
+    if (err.message.startsWith('Token ') || err.originalError instanceof DuplicateError) {
       return new AuthenticationError(err.message);
     }
-
     return err;
   },
 });

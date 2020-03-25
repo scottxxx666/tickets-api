@@ -1,10 +1,19 @@
 const jwt = require('jsonwebtoken');
 const { createUser, getUserByOpenId } = require('./user-repository');
-const { getUserInput, getOpenId } = require('./platform/google');
+const { getOpenIdAndUserInput, getOpenId } = require('./platform/google');
 const Token = require('./token');
+const DuplicateError = require('./error/duplicate-error');
+
+async function checkDuplicate(openId) {
+  const existed = await getUserByOpenId(openId);
+  if (existed) {
+    throw new DuplicateError('User already exists');
+  }
+}
 
 const signUp = async (_, args) => {
-  const userInput = await getUserInput(args.token);
+  const { openId, userInput } = await getOpenIdAndUserInput(args.token);
+  await checkDuplicate(openId);
   const user = await createUser(userInput);
   return {
     token: Token.generate(user),

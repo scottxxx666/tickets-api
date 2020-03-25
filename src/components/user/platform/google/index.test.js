@@ -1,5 +1,5 @@
 const api = require('./api');
-const { getOpenId, getUserInput } = require('./index');
+const { getOpenId, getOpenIdAndUserInput } = require('./index');
 
 jest.mock('./api');
 
@@ -25,14 +25,14 @@ function givenUserInfo(openId, payload) {
   api.getValidUserInfo.mockResolvedValue({ openId, payload });
 }
 
-describe('getUserInput', function () {
+describe('getOpenIdAndUserInput', function () {
   test('Should call api with token', async function () {
     await givenInput('fakeToken');
     shouldCall(api.getValidUserInfo).toHaveBeenCalledWith('fakeToken');
 
     async function givenInput(token) {
       givenUserInfo('openId', { name: 'name' });
-      await getUserInput(token);
+      await getOpenIdAndUserInput(token);
     }
 
     function shouldCall(api) {
@@ -40,14 +40,14 @@ describe('getUserInput', function () {
     }
   });
 
-  test('Return open id, name, email', async function () {
+  test('Return user input contains open id, name, email', async function () {
     givenUserInfo('openId', { name: 'name' });
-    await shouldReturn({ name: 'name', email: null, openIds: [{ platform: 'GOOGLE', openId: 'openId' }] });
+    await shouldReturnUserInput({ name: 'name', email: null, openIds: [{ platform: 'GOOGLE', openId: 'openId' }] });
   });
 
-  async function shouldReturn(expected) {
-    result = await getUserInput('token');
-    expect(result).toStrictEqual(expected);
+  async function shouldReturnUserInput(expected) {
+    result = await getOpenIdAndUserInput('token');
+    expect(result.userInput).toStrictEqual(expected);
   }
 
   test('Return email if contained and verified', async function () {
@@ -71,8 +71,8 @@ describe('getUserInput', function () {
   });
 
   async function shouldReturnContains(object) {
-    result = await getUserInput('token');
-    expect(result).toStrictEqual(expect.objectContaining(object));
+    result = await getOpenIdAndUserInput('token');
+    expect(result.userInput).toStrictEqual(expect.objectContaining(object));
   }
 
   function givenPayloadContains(fields) {

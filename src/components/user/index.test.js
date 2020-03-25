@@ -1,7 +1,8 @@
 const { signUp, login } = require('./index');
 const { createUser, getUserByOpenId } = require('./user-repository');
-const { getUserInput, getOpenId } = require('./platform/google');
+const { getOpenIdAndUserInput, getOpenId } = require('./platform/google');
 const Token = require('./token');
+const DuplicatedError = require('./error/duplicate-error');
 
 jest.mock('./user-repository');
 jest.mock('./platform/google');
@@ -12,6 +13,10 @@ beforeEach(function () {
 });
 
 describe('signUp', () => {
+  beforeEach(function () {
+    getOpenIdAndUserInput.mockResolvedValue({});
+  });
+
   test('Return token and user', async function () {
     givenToken('token');
     givenUserCreated('user');
@@ -23,12 +28,12 @@ describe('signUp', () => {
   }
 
   async function shouldReturn(expected) {
-    await expect(signUp(null, {})).resolves.toStrictEqual(expected);
+    await expect(signUp(null, { platform: 'platform' })).resolves.toStrictEqual(expected);
   }
 
   test('Use token to get user input', async function () {
     await signUp(null, { token: 'fakeToken' });
-    await expect(getUserInput).toBeCalledWith('fakeToken');
+    await expect(getOpenIdAndUserInput).toBeCalledWith('fakeToken');
   });
 
   test('Create new user', async function () {
@@ -38,8 +43,13 @@ describe('signUp', () => {
   });
 
   function givenUserInput(userInput) {
-    getUserInput.mockResolvedValue(userInput);
+    getOpenIdAndUserInput.mockResolvedValue({ userInput });
   }
+
+  test('If user exists', async function () {
+    getUserByOpenId.mockResolvedValue({});
+    await expect(signUp(null, {})).rejects.toThrowError(new DuplicatedError('User already exists'));
+  });
 });
 
 function givenToken(token) {

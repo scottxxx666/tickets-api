@@ -1,8 +1,8 @@
 const { getValidUserInfo } = require('./api');
 
-const getUserInput = async (token) => {
+const getOpenIdAndUserInput = async (token) => {
   const { openId, payload } = await getValidUserInfo(token);
-  return toUserInput(openId, payload);
+  return { openId, userInput: toUserInput(openId, payload) };
 };
 
 function toUserInput(openId, payload) {
@@ -25,4 +25,4 @@ const getOpenId = async (token) => {
   return openId;
 };
 
-module.exports = { getUserInput, getOpenId };
+module.exports = { getOpenIdAndUserInput, getOpenId };
