@@ -6,6 +6,7 @@ const initDB = require('./db');
 const resolvers = require('./resolvers');
 const { AuthenticationError } = require('apollo-server');
 const DuplicateError = require('./components/user/error/duplicate-error');
+const NotFoundError = require('./components/user/error/not-found-error');
 
 initDB();
 
@@ -21,7 +22,7 @@ const server = new ApolloServer({
     }
   },
   formatError: (err) => {
-    if (err.message.startsWith('Token ') || err.originalError instanceof DuplicateError) {
+    if (err.message.startsWith('Token ') || err.originalError instanceof DuplicateError || err.originalError instanceof NotFoundError) {
       return new AuthenticationError(err.message);
     }
     return err;

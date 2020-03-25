@@ -3,6 +3,7 @@ const { createUser, getUserByOpenId } = require('./user-repository');
 const { getOpenIdAndUserInput, getOpenId } = require('./platform/google');
 const Token = require('./token');
 const DuplicatedError = require('./error/duplicate-error');
+const NotFoundError = require('./error/duplicate-error');
 
 jest.mock('./user-repository');
 jest.mock('./platform/google');
@@ -57,19 +58,28 @@ function givenToken(token) {
 }
 
 describe('login', function () {
-  test('Return user and token', async function () {
+  beforeEach(function () {
     givenUser('user');
-    givenToken('token');
-    await shouldReturn({ token: 'token', user: 'user' });
   });
 
   function givenUser(user) {
     getUserByOpenId.mockResolvedValue(user);
   }
 
+  test('Return user and token', async function () {
+    givenUser('user');
+    givenToken('token');
+    await shouldReturn({ token: 'token', user: 'user' });
+  });
+
   async function shouldReturn(expected) {
     await expect(login(null, {})).resolves.toStrictEqual(expected);
   }
+
+  test('Throw error if no user', async function () {
+    givenUser(null);
+    await expect(login(null, {})).rejects.toThrowError(new DuplicatedError('User not found'));
+  });
 
   test('Use token to get open id', async function () {
     await login(null, { token: 'newFakeToken' });
