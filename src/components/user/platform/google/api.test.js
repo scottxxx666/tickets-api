@@ -12,7 +12,7 @@ describe('getValidUserInfo', function () {
 
   test('throw error if aud not equal client id', async function () {
     given('fakeUserId', { aud: 'wrong aud' });
-    await shouldThrow(new AuthInvalidError('Invalid aud'));
+    await shouldThrow(new AuthInvalidError('Token has invalid aud'));
   });
 
   function given(userId, payload) {

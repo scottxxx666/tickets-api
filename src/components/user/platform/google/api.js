@@ -20,7 +20,7 @@ async function retrieveUserInfo(token) {
 
 function validate(payload) {
   if (payload.aud !== clientId) {
-    throw new AuthInvalidError('Invalid aud');
+    throw new AuthInvalidError('Token has invalid aud');
   }
 }
 

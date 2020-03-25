@@ -4,6 +4,7 @@ const typeDefs = require('./schema');
 const { decodeToken } = require('./components/user');
 const initDB = require('./db');
 const resolvers = require('./resolvers');
+const { AuthenticationError } = require('apollo-server');
 
 initDB();
 
@@ -17,6 +18,14 @@ const server = new ApolloServer({
         user,
       };
     }
+  },
+  formatError: (err) => {
+    // let client know token error
+    if (err.message.startsWith('Token ')) {
+      return new AuthenticationError(err.message);
+    }
+
+    return err;
   },
 });
 
