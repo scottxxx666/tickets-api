@@ -5,12 +5,12 @@ const AuthInvalidError = require('../auth-invalid-error');
 jest.mock('google-auth-library');
 
 describe('getValidUserInfo', function () {
-  test('return user id and payload', async function () {
+  test('Return user id and payload', async function () {
     given('fakeUserId', 'fakePayload');
     await shouldReturn({ openId: 'fakeUserId', payload: 'fakePayload' });
   });
 
-  test('throw error if aud not equal client id', async function () {
+  test('Throw error if aud not equal client id', async function () {
     given('fakeUserId', { aud: 'wrong aud' });
     await shouldThrow(new AuthInvalidError('Token has invalid aud'));
   });

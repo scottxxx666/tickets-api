@@ -11,7 +11,7 @@ beforeEach(function () {
 
 describe('getOpenId', function () {
   test('Return open id', async function () {
-    givenResponse('open id');
+    givenUserInfo('open id');
     await shouldReturn('open id');
   });
 
@@ -21,7 +21,7 @@ describe('getOpenId', function () {
   }
 });
 
-function givenResponse(openId, payload) {
+function givenUserInfo(openId, payload) {
   api.getValidUserInfo.mockResolvedValue({ openId, payload });
 }
 
@@ -31,7 +31,7 @@ describe('getUserInput', function () {
     shouldCall(api.getValidUserInfo).toHaveBeenCalledWith('fakeToken');
 
     async function givenInput(token) {
-      givenResponse('openId', { name: 'name' });
+      givenUserInfo('openId', { name: 'name' });
       await getUserInput(token);
     }
 
@@ -41,7 +41,7 @@ describe('getUserInput', function () {
   });
 
   test('Return open id, name, email', async function () {
-    givenResponse('openId', { name: 'name' });
+    givenUserInfo('openId', { name: 'name' });
     await shouldReturn({ name: 'name', email: null, openIds: [{ platform: 'GOOGLE', openId: 'openId' }] });
   });
 
@@ -51,22 +51,22 @@ describe('getUserInput', function () {
   }
 
   test('Return email if contained and verified', async function () {
-    givenResponseContains({ email: 'fake@email', email_verified: true });
+    givenPayloadContains({ email: 'fake@email', email_verified: true });
     await shouldReturnContains({ email: 'fake@email' });
   });
 
   test('Return email null if not contained', async function () {
-    givenResponseContains({ email_verified: true });
+    givenPayloadContains({ email_verified: true });
     await shouldReturnContains({ email: null });
   });
 
   test('Return email null if email null', async function () {
-    givenResponseContains({ email: null, email_verified: true });
+    givenPayloadContains({ email: null, email_verified: true });
     await shouldReturnContains({ email: null });
   });
 
   test('Return email null if email verified false', async function () {
-    givenResponseContains({ email: 'email', email_verified: false });
+    givenPayloadContains({ email: 'email', email_verified: false });
     await shouldReturnContains({ email: null });
   });
 
@@ -75,8 +75,8 @@ describe('getUserInput', function () {
     expect(result).toStrictEqual(expect.objectContaining(object));
   }
 
-  function givenResponseContains(fields) {
-    givenResponse('openId', { name: 'name', ...fields });
+  function givenPayloadContains(fields) {
+    givenUserInfo('openId', { name: 'name', ...fields });
   }
 });
 
