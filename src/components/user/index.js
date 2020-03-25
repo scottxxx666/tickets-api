@@ -1,4 +1,3 @@
-const jwt = require('jsonwebtoken');
 const { createUser, getUserByOpenId } = require('./user-repository');
 const { getOpenIdAndUserInput, getOpenId } = require('./platform/google');
 const Token = require('./token');
