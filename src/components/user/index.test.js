@@ -3,7 +3,7 @@ const { createUser, getUserByOpenId } = require('./user-repository');
 const { getOpenIdAndUserInput, getOpenId } = require('./platform/google');
 const Token = require('./token');
 const DuplicatedError = require('./error/duplicate-error');
-const NotFoundError = require('./error/duplicate-error');
+const NotFoundError = require('./error/not-found-error');
 
 jest.mock('./user-repository');
 jest.mock('./platform/google');
@@ -49,7 +49,8 @@ describe('signUp', () => {
 
   test('If user exists', async function () {
     getUserByOpenId.mockResolvedValue({});
-    await expect(signUp(null, {})).rejects.toThrowError(new DuplicatedError('User already exists'));
+    await expect(signUp(null, {})).rejects.toThrowError(DuplicatedError);
+    await expect(signUp(null, {})).rejects.toThrowError('User already exists');
   });
 });
 
@@ -78,7 +79,8 @@ describe('login', function () {
 
   test('Throw error if no user', async function () {
     givenUser(null);
-    await expect(login(null, {})).rejects.toThrowError(new DuplicatedError('User not found'));
+    await expect(login(null, {})).rejects.toThrowError(NotFoundError);
+    await expect(login(null, {})).rejects.toThrowError('User not found');
   });
 
   test('Use token to get open id', async function () {
