@@ -1,26 +1,17 @@
 require('dotenv').config();
 const { ApolloServer } = require('apollo-server');
 const typeDefs = require('./schema');
-const { decodeToken } = require('./components/user');
 const initDB = require('./db');
 const resolvers = require('./resolvers');
 const { AuthenticationError } = require('apollo-server');
 const DuplicateError = require('./components/user/error/duplicate-error');
 const NotFoundError = require('./components/user/error/not-found-error');
+const context = require('./context');
 
 initDB();
 
 const server = new ApolloServer({
-  typeDefs, resolvers, context: ({ req }) => {
-    const auth = req.get('Authorization');
-    if (auth) {
-      const token = auth.replace('Bearer ', '');
-      const { user } = decodeToken(token);
-      return {
-        user,
-      };
-    }
-  },
+  typeDefs, resolvers, context,
   formatError: (err) => {
     if (err.message.startsWith('Token ') || err.originalError instanceof DuplicateError || err.originalError instanceof NotFoundError) {
       return new AuthenticationError(err.message);
