@@ -5,15 +5,12 @@ const initDB = require('./db');
 const resolvers = require('./resolvers');
 const context = require('./context');
 const formatError = require('./format-error');
-const userRepo = require('./components/user/user-repository');
-const ticketRepo = require('./components/ticket/ticket-repository');
+const dataSources = require('./data-sources');
 
 initDB();
 
 const server = new ApolloServer({
-  typeDefs, resolvers, context, formatError, dataSources: () => ({
-    userRepo, ticketRepo,
-  }),
+  typeDefs, resolvers, context, formatError, dataSources,
 });
 
 // The `listen` method launches a web server.
