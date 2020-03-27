@@ -1,5 +1,5 @@
 const { signUp, login } = require('./index');
-const { createUser, getUserByOpenId } = require('./user-repository');
+const userRepo = require('./user-repository');
 const { getOpenIdAndUserInput, getOpenId } = require('./platform/google');
 const Token = require('./token');
 const DuplicatedError = require('./error/duplicate-error');
@@ -13,6 +13,8 @@ beforeEach(function () {
   jest.resetAllMocks();
 });
 
+const dataSources = { userRepo };
+
 describe('signUp', () => {
   beforeEach(function () {
     getOpenIdAndUserInput.mockResolvedValue({});
@@ -25,22 +27,22 @@ describe('signUp', () => {
   });
 
   function givenUserCreated(user) {
-    createUser.mockResolvedValue(user);
+    userRepo.createUser.mockResolvedValue(user);
   }
 
   async function shouldReturn(expected) {
-    await expect(signUp(null, { platform: 'platform' })).resolves.toStrictEqual(expected);
+    await expect(signUp(null, { platform: 'platform' }, { dataSources })).resolves.toStrictEqual(expected);
   }
 
   test('Use token to get user input', async function () {
-    await signUp(null, { token: 'fakeToken' });
+    await signUp(null, { token: 'fakeToken' }, { dataSources });
     await expect(getOpenIdAndUserInput).toBeCalledWith('fakeToken');
   });
 
   test('Create new user', async function () {
     givenUserInput('userInput');
-    await signUp(null, {});
-    expect(createUser).toBeCalledWith('userInput');
+    await signUp(null, {}, { dataSources });
+    expect(userRepo.createUser).toBeCalledWith('userInput');
   });
 
   function givenUserInput(userInput) {
@@ -48,10 +50,14 @@ describe('signUp', () => {
   }
 
   test('If user exists', async function () {
-    getUserByOpenId.mockResolvedValue({});
-    await expect(signUp(null, {})).rejects.toThrowError(DuplicatedError);
-    await expect(signUp(null, {})).rejects.toThrowError('User already exists');
+    givenUserAlreadyExists();
+    await expect(signUp(null, {}, { dataSources })).rejects.toThrowError(DuplicatedError);
+    await expect(signUp(null, {}, { dataSources })).rejects.toThrowError('User already exists');
   });
+
+  function givenUserAlreadyExists() {
+    userRepo.getUserByOpenId.mockResolvedValue({});
+  }
 });
 
 function givenToken(token) {
@@ -64,7 +70,7 @@ describe('login', function () {
   });
 
   function givenUser(user) {
-    getUserByOpenId.mockResolvedValue(user);
+    userRepo.getUserByOpenId.mockResolvedValue(user);
   }
 
   test('Return user and token', async function () {
@@ -74,24 +80,24 @@ describe('login', function () {
   });
 
   async function shouldReturn(expected) {
-    await expect(login(null, {})).resolves.toStrictEqual(expected);
+    await expect(login(null, {}, { dataSources })).resolves.toStrictEqual(expected);
   }
 
   test('Throw error if no user', async function () {
     givenUser(null);
-    await expect(login(null, {})).rejects.toThrowError(NotFoundError);
-    await expect(login(null, {})).rejects.toThrowError('User not found');
+    await expect(login(null, {}, { dataSources })).rejects.toThrowError(NotFoundError);
+    await expect(login(null, {}, { dataSources })).rejects.toThrowError('User not found');
   });
 
   test('Use token to get open id', async function () {
-    await login(null, { token: 'newFakeToken' });
+    await login(null, { token: 'newFakeToken' }, { dataSources });
     expect(getOpenId).toBeCalledWith('newFakeToken');
   });
 
   test('Use open id to get the user', async function () {
     givenOpenId('openId');
-    await login(null, {});
-    expect(getUserByOpenId).toBeCalledWith('openId');
+    await login(null, {}, { dataSources });
+    expect(userRepo.getUserByOpenId).toBeCalledWith('openId');
   });
 
   function givenOpenId(openId) {
@@ -100,7 +106,7 @@ describe('login', function () {
 
   test('Use user to generate token', async function () {
     givenUser('fakeUser');
-    await login(null, {});
+    await login(null, {}, { dataSources });
     expect(Token.generate).toBeCalledWith('fakeUser');
   });
 });
