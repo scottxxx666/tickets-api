@@ -1,12 +1,12 @@
 const TicketRepo = require('./ticket-repository');
 
-const tickets = (parent, args) => {
-  return TicketRepo.getByEventId(args.eventId);
+const tickets = (parent, args, { dataSources }) => {
+  return dataSources.ticketRepo.getByEventId(args.eventId);
 };
 
-const createTicket = (parent, args, context, info) => {
+const createTicket = (parent, args, { dataSources, user }) => {
   const input = args.input;
-  return TicketRepo.create({
+  return dataSources.ticketRepo.create({
     status: 'WAITING',
     area: input.area,
     seat: input.seat,
@@ -15,7 +15,7 @@ const createTicket = (parent, args, context, info) => {
     payment: input.payment,
     note: input.note,
     contactInformation: input.contactInformation,
-    postedBy: { id: context.user.id },
+    postedBy: { id: user.id },
     eventId: input.event.id,
   });
 };
@@ -31,7 +31,7 @@ const updateTicket = async (parent, args, context) => {
   const id = args.id;
   const ticket = await TicketRepo.find(id);
   checkPermission(ticket, context);
-  return TicketRepo.findAndUpdate(id, {
+  return context.ticketRepo.findAndUpdate(id, {
     status: input.status,
     area: input.area,
     seat: input.seat,
