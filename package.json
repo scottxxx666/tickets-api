@@ -18,7 +18,7 @@
     "nodemon": "^2.0.2"
   },
   "scripts": {
-    "dev": "nodemon index.js"
+    "dev": "nodemon src/index.js"
   },
   "jest": {
     "testEnvironment": "node",
