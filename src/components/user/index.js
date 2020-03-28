@@ -4,7 +4,7 @@ const DuplicateError = require('./error/duplicate-error');
 const NotFoundError = require('./error/not-found-error');
 
 async function checkDuplicate(openId, dataSources) {
-  const existed = await dataSources.userRepo.getUserByOpenId(openId);
+  const existed = await dataSources.userOpenIdLoader.load(openId);
   if (existed) {
     throw new DuplicateError('User already exists');
   }
@@ -22,7 +22,7 @@ const signUp = async (_, args, { dataSources }) => {
 
 const login = async (_, args, { dataSources }) => {
   const openId = await getOpenId(args.token);
-  const user = await dataSources.userRepo.getUserByOpenId(openId);
+  const user = await dataSources.userOpenIdLoader.load(openId);
   checkExists(user);
   return {
     token: Token.generate(user),

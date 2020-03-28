@@ -13,12 +13,17 @@ beforeEach(function () {
   jest.resetAllMocks();
 });
 
-const dataSources = { userRepo };
+const dataSources = { userRepo, userOpenIdLoader: { load: jest.fn() } };
 
 describe('signUp', () => {
   beforeEach(function () {
-    getOpenIdAndUserInput.mockResolvedValue({});
+    givenUserInput({});
+    givenUserNotExists();
   });
+
+  function givenUserNotExists() {
+    dataSources.userOpenIdLoader.load.mockResolvedValue(null);
+  }
 
   test('Return token and user', async function () {
     givenToken('token');
@@ -56,7 +61,7 @@ describe('signUp', () => {
   });
 
   function givenUserAlreadyExists() {
-    userRepo.getUserByOpenId.mockResolvedValue({});
+    dataSources.userOpenIdLoader.load.mockResolvedValue({});
   }
 });
 
@@ -70,7 +75,7 @@ describe('login', function () {
   });
 
   function givenUser(user) {
-    userRepo.getUserByOpenId.mockResolvedValue(user);
+    dataSources.userOpenIdLoader.load.mockResolvedValue(user);
   }
 
   test('Return user and token', async function () {
@@ -97,7 +102,7 @@ describe('login', function () {
   test('Use open id to get the user', async function () {
     givenOpenId('openId');
     await login(null, {}, { dataSources });
-    expect(userRepo.getUserByOpenId).toBeCalledWith('openId');
+    expect(dataSources.userOpenIdLoader.load).toBeCalledWith('openId');
   });
 
   function givenOpenId(openId) {

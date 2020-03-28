@@ -1,7 +1,7 @@
 const TicketRepo = require('./ticket-repository');
 
 const tickets = (parent, args, { dataSources }) => {
-  return dataSources.ticketRepo.getByEventId(args.eventId);
+  return dataSources.ticketLoader.load(args.eventId);
 };
 
 const createTicket = (parent, args, { dataSources, user }) => {
