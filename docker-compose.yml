@@ -3,8 +3,12 @@ services:
   tickets-api:
     image: node:13.8.0-alpine3.11
     volumes:
-    - .:/usr/tickets-api
+      - applications-docker-sync:/usr/tickets-api:nocopy
     ports:
-    - 4000:4000
+      - 4000:4000
     working_dir: /usr/tickets-api
     command: yarn dev
+
+volumes:
+  applications-docker-sync:
+    external: true
