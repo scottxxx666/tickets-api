@@ -1,6 +1,6 @@
 FROM node:13.8.0-alpine3.11
 
-COPY . .
+COPY .env package.json yarn.lock ./src ./
 
 RUN yarn install
 
