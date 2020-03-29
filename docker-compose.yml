@@ -1,13 +1,10 @@
 version: "3"
 services:
-  nginx:
-    image: nginx:alpine
+  tickets-api:
+    image: node:13.8.0-alpine3.11
     volumes:
-      - ./nginx:/etc/nginx/conf.d
-    links:
-      - node
+    - .:/usr/tickets-api
     ports:
-      - 80:80
-  node:
-    build:
-      context: ./src
+    - 4000:4000
+    working_dir: /usr/tickets-api
+    command: yarn dev
