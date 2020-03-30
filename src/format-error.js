@@ -21,6 +21,7 @@ const formatError = (err) => {
   if (err.originalError instanceof ResourceNotFoundError) {
     return new UserInputError(err.message);
   }
+  return err;
 };
 
 module.exports = formatError;
