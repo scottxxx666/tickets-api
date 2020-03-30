@@ -1,4 +1,6 @@
 const TicketRepo = require('./ticket-repository');
+const ResourceNotFound = require('./errors/resource-not-found-error');
+const PermissionError = require('./errors/permission-error');
 
 const tickets = (parent, args, { dataSources }) => {
   return dataSources.ticketLoader.load(args.eventId);
@@ -22,7 +24,7 @@ const createTicket = (parent, args, { dataSources, user }) => {
 
 function checkPermission(ticket, context) {
   if (ticket.postedBy.id.toString() !== context.user.id) {
-    throw new Error('No permission');
+    throw new PermissionError('No permission');
   }
 }
 
@@ -30,8 +32,9 @@ const updateTicket = async (parent, args, context) => {
   const input = args.input;
   const id = args.id;
   const ticket = await TicketRepo.find(id);
+  checkExists(ticket);
   checkPermission(ticket, context);
-  return context.ticketRepo.findAndUpdate(id, {
+  return context.dataSources.ticketRepo.findAndUpdate(id, {
     status: input.status,
     area: input.area,
     seat: input.seat,
@@ -44,6 +47,12 @@ const updateTicket = async (parent, args, context) => {
     eventId: input.event.id,
   });
 };
+
+function checkExists(ticket) {
+  if (!ticket) {
+    throw new ResourceNotFound('Ticket not found');
+  }
+}
 
 module.exports = { tickets, createTicket, updateTicket };
 
