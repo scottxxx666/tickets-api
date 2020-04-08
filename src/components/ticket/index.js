@@ -5,6 +5,9 @@ const PermissionError = require('./errors/permission-error');
 const tickets = (parent, args, { dataSources }) => {
   return dataSources.eventTicketLoader.load(args.eventId);
 };
+
+const ticket = (parent, args, { dataSources }) => {
+  return dataSources.ticketLoader.load(args.id);
 };
 
 const createTicket = (parent, args, { dataSources, user }) => {
@@ -55,5 +58,5 @@ function checkExists(ticket) {
   }
 }
 
-module.exports = { tickets, createTicket, updateTicket };
+module.exports = { ticket,tickets, createTicket, updateTicket };
 

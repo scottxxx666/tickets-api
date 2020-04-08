@@ -1,8 +1,9 @@
-const { tickets, createTicket, updateTicket } = require('./components/ticket');
+const { ticket, tickets, createTicket, updateTicket } = require('./components/ticket');
 const { signUp, login } = require('./components/user');
 
 const resolvers = {
   Query: {
+    ticket,
     tickets,
   },
   Mutation: {

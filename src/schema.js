@@ -64,6 +64,7 @@ module.exports = gql`
     }
 
     type Query {
+        ticket(id:ID!): Ticket
         tickets(eventId: ID!): [Ticket]
     }
 
