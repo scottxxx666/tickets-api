@@ -6,7 +6,7 @@ const PermissionError = require('./errors/permission-error');
 jest.mock('./ticket-repository');
 
 const dataSources = {
-  ticketLoader: { load: jest.fn() },
+  eventTicketLoader: { load: jest.fn() },
   ticketRepo,
 };
 
@@ -16,9 +16,9 @@ beforeEach(function () {
 
 describe('tickets', function () {
   test('Should get tickets by event id', async function () {
-    dataSources.ticketLoader.load.mockResolvedValue('tickets');
+    dataSources.eventTicketLoader.load.mockResolvedValue('tickets');
     await expect(tickets(null, { eventId: 'eventId' }, { dataSources })).resolves.toBe('tickets');
-    expect(dataSources.ticketLoader.load).toBeCalledWith('eventId');
+    expect(dataSources.eventTicketLoader.load).toBeCalledWith('eventId');
   });
 });
 

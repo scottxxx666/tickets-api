@@ -3,7 +3,8 @@ const ResourceNotFound = require('./errors/resource-not-found-error');
 const PermissionError = require('./errors/permission-error');
 
 const tickets = (parent, args, { dataSources }) => {
-  return dataSources.ticketLoader.load(args.eventId);
+  return dataSources.eventTicketLoader.load(args.eventId);
+};
 };
 
 const createTicket = (parent, args, { dataSources, user }) => {
