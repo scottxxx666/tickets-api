@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tickets-deployment
+spec:
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: ticket-api
+    spec:
+      containers:
+        - name: ticket-api
+          image: scottxxx666/tickets:1.0.0
+          ports:
+            - containerPort: 4000
+  selector:
+    matchLabels:
+      app: ticket-api
+
+
