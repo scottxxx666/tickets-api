@@ -7,15 +7,16 @@ spec:
   template:
     metadata:
       labels:
-        app: ticket-api
+        app: tickets
+        tier: backend
     spec:
       containers:
         - name: ticket-api
-          image: scottxxx666/tickets:1.0.0
+          image: scottxxx666/tickets-api:1.0.0
           ports:
             - containerPort: 4000
   selector:
     matchLabels:
-      app: ticket-api
-
+      app: tickets
+      tier: backend
 
