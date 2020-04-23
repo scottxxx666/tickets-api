@@ -15,6 +15,10 @@ spec:
           image: scottxxx666/tickets-api:1.0.0
           ports:
             - containerPort: 4000
+          readinessProbe:
+            httpGet:
+              path: /.well-known/apollo/server-health
+              port: 4000
   selector:
     matchLabels:
       app: tickets

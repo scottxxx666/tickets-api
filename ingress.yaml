@@ -1,0 +1,18 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: name-virtual-host-ingress
+spec:
+  rules:
+    - host: test.tickets.com
+      http:
+        paths:
+          - backend:
+              serviceName: tickets-frontend
+              servicePort: 80
+    - host: test.api.tickets.com
+      http:
+        paths:
+          - backend:
+              serviceName: tickets-api
+              servicePort: 4000
