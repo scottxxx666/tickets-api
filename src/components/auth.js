@@ -9,4 +9,11 @@ function checkAuth({ authError, user }) {
   }
 }
 
-module.exports = { checkAuth };
+function needAuth(fn) {
+  return (...args) => {
+    checkAuth(args[2]);
+    return fn(...args);
+  };
+}
+
+module.exports = { needAuth };

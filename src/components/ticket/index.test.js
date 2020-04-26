@@ -104,6 +104,6 @@ describe('updateTicket', function () {
 
   test('Should throw error if no user', async function () {
     ticketRepo.find.mockResolvedValue({ postedBy: { id: 'userId' } });
-    await expect(updateTicket(null, { input }, { dataSources })).rejects.toThrow(Error);
+    await expect(() => updateTicket(null, { input }, { dataSources })).toThrow(Error);
   });
 });
