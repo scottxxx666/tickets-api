@@ -31,7 +31,12 @@ test('Contains user null if no auth token', function () {
 
 test('Not contains user if providing invalid auth token', function () {
   givenInvalidToken();
-  expect(() => context({ req })).toThrowError(Error);
+  returnContains({ user: null });
+});
+
+test('Add auth error if providing invalid auth token', function () {
+  givenInvalidToken();
+  expect(context({ req }).authError).toBeInstanceOf(Error);
 });
 
 function givenInvalidToken() {

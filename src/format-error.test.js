@@ -2,7 +2,7 @@ const formatError = require('./format-error');
 const { AuthenticationError, ApolloError, ForbiddenError, UserInputError } = require('apollo-server');
 const DuplicateError = require('./components/user/error/duplicate-error');
 const NotFoundError = require('./components/user/error/not-found-error');
-const PermissionError = require('./components/ticket/errors/permission-error');
+const PermissionError = require('./components/permission-error');
 const ResourceNotFoundError = require('./components/ticket/errors/resource-not-found-error');
 
 let result;

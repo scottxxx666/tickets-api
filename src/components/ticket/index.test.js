@@ -1,7 +1,7 @@
 const { tickets, createTicket, updateTicket } = require('./index');
 const ticketRepo = require('./ticket-repository');
 const ResourceNotFound = require('./errors/resource-not-found-error');
-const PermissionError = require('./errors/permission-error');
+const PermissionError = require('../permission-error');
 
 jest.mock('./ticket-repository');
 
@@ -57,6 +57,11 @@ describe('create ticket', function () {
     await shouldBeCalledWithContains(ticketRepo.create, { postedBy: { id: 'userId' } });
   });
 
+  test('Should throw error if not login', async function () {
+    givenUser(null);
+    await expect(() => createTicket(ticketRepo.create, { postedBy: { id: 'userId' } }, {})).toThrow(Error);
+  });
+
   function givenUser(authedUser) {
     user = authedUser;
   }
@@ -95,5 +100,10 @@ describe('updateTicket', function () {
     ticketRepo.find.mockResolvedValue({ postedBy: { id: 'wrongUserId' } });
     await expect(updateTicket(null, { input }, { dataSources, user })).rejects.toThrowError('No permission');
     await expect(updateTicket(null, { input }, { dataSources, user })).rejects.toThrow(PermissionError);
+  });
+
+  test('Should throw error if no user', async function () {
+    ticketRepo.find.mockResolvedValue({ postedBy: { id: 'userId' } });
+    await expect(updateTicket(null, { input }, { dataSources })).rejects.toThrow(Error);
   });
 });
